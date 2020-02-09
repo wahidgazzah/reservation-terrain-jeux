@@ -1,2 +1,2 @@
 # reservation-terrain-jeux
-Une application REST de réservation de terrain des Jeux
+Une application REST de reservation de terrain des Jeux
