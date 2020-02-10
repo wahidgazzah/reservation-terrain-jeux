@@ -1,8 +1,11 @@
 package com.demo.reservation.service;
 
-import com.demo.reservation.dto.weather.WeatherDTO;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.demo.reservation.dto.ReservationRequestDTO;
 
 public interface IYahooWeatherService {
 
-	 WeatherDTO findWeather();
+	@Transactional(readOnly = false, rollbackFor = Exception.class)
+	boolean checkPrevisionPluie(ReservationRequestDTO request);
 }

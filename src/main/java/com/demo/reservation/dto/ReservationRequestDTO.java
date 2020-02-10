@@ -34,5 +34,45 @@ public class ReservationRequestDTO {
 	public void setTerrainType(TerrainType terrainType) {
 		this.terrainType = terrainType;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dateDebut == null) ? 0 : dateDebut.hashCode());
+		result = prime * result + ((dateFin == null) ? 0 : dateFin.hashCode());
+		result = prime * result + ((idsJoueurs == null) ? 0 : idsJoueurs.hashCode());
+		result = prime * result + ((terrainType == null) ? 0 : terrainType.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReservationRequestDTO other = (ReservationRequestDTO) obj;
+		if (dateDebut == null) {
+			if (other.dateDebut != null)
+				return false;
+		} else if (!dateDebut.equals(other.dateDebut))
+			return false;
+		if (dateFin == null) {
+			if (other.dateFin != null)
+				return false;
+		} else if (!dateFin.equals(other.dateFin))
+			return false;
+		if (idsJoueurs == null) {
+			if (other.idsJoueurs != null)
+				return false;
+		} else if (!idsJoueurs.equals(other.idsJoueurs))
+			return false;
+		if (terrainType != other.terrainType)
+			return false;
+		return true;
+	}
+	
+	
     
 }

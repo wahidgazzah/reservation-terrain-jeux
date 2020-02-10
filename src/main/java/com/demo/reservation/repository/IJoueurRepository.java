@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.demo.reservation.entity.JoueurEntity;
 
+/**
+ * Joueur Repository
+ * @author wahid
+ *
+ */
 @Repository
 public interface IJoueurRepository  extends JpaRepository<JoueurEntity, Long>{
 

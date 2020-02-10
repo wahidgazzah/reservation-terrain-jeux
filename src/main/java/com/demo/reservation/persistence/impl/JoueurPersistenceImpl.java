@@ -24,6 +24,9 @@ public class JoueurPersistenceImpl implements IJoueurPersistence{
 
 	private static final Logger logger = LoggerFactory.getLogger(JoueurPersistenceImpl.class);
 
+	/**
+	 * inscription joueur
+	 */
 	@Override
 	public Long inscription(JoueurDTO dto) {
 		

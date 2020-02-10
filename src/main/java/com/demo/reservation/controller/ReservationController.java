@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.reservation.dto.ReservationDTO;
 import com.demo.reservation.dto.ReservationRequestDTO;
 import com.demo.reservation.dto.ReservationResponseDTO;
-import com.demo.reservation.dto.weather.WeatherDTO;
 import com.demo.reservation.service.IReservationService;
-import com.demo.reservation.service.IYahooWeatherService;
 
 import io.swagger.annotations.Api;
 
@@ -33,9 +31,6 @@ public class ReservationController {
 	
 	@Autowired
 	private IReservationService reservationService;
-	
-	@Autowired
-	private IYahooWeatherService yahooWeatherService;
 
 	@RequestMapping(value = "/reservation", method = RequestMethod.POST)
 	public ReservationResponseDTO reservation(@RequestBody ReservationRequestDTO dto) {
@@ -45,6 +40,10 @@ public class ReservationController {
 		return reservationService.reservation(dto);
 	}
 	
+	/**
+	 * Recuperer la liste des reservations
+	 * @return List<ReservationDTO>
+	 */
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = "application/json")
 	public List<ReservationDTO> getAll() {
 		  
@@ -53,9 +52,4 @@ public class ReservationController {
 		return reservationService.getAll();
 	}
 	
-	@RequestMapping(value = "/weather", method = RequestMethod.GET, produces = "application/json")
-	public WeatherDTO findWeather() {
-		
-		return yahooWeatherService.findWeather();
-	}
 }

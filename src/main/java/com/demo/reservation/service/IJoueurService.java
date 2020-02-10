@@ -1,5 +1,7 @@
 package com.demo.reservation.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.demo.reservation.dto.JoueurDTO;
 
 /**
@@ -7,7 +9,9 @@ import com.demo.reservation.dto.JoueurDTO;
  * @author wahid
  *
  */
+
 public interface IJoueurService {
 
+	@Transactional(readOnly = false, rollbackFor = Exception.class)
 	Long inscription(JoueurDTO dto);
 }

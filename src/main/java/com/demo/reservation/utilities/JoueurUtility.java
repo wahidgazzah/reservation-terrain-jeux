@@ -46,17 +46,20 @@ public class JoueurUtility {
 	 */
 	public static JoueurEntity toEntity(JoueurDTO dto) {
 		JoueurEntity entity = new JoueurEntity();
-		entity.setId(dto.getId());
-		entity.setFirstName(dto.getFirstName());
-		entity.setLastName(dto.getLastName());
-		entity.setPhoneNumber(dto.getPhoneNumber());
-		if(dto.getReservationsList() != null) {
-			Set<ReservationEntity> reservations = new HashSet<>();
-			for(ReservationDTO reservationDTO : dto.getReservationsList()) {
-				reservations.add(ReservationUtility.toEntity(reservationDTO));
+		if(dto != null) {
+			entity.setId(dto.getId());
+			entity.setFirstName(dto.getFirstName());
+			entity.setLastName(dto.getLastName());
+			entity.setPhoneNumber(dto.getPhoneNumber());
+			if(dto.getReservationsList() != null) {
+				Set<ReservationEntity> reservations = new HashSet<>();
+				for(ReservationDTO reservationDTO : dto.getReservationsList()) {
+					reservations.add(ReservationUtility.toEntity(reservationDTO));
+				}
+				entity.setReservationsList(reservations);
 			}
-			entity.setReservationsList(reservations);
 		}
+
 		return entity;
 	}
 	

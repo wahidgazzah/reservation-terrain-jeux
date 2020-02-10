@@ -22,6 +22,9 @@ public class JoueurServiceImpl implements IJoueurService{
 	@Autowired
 	private IJoueurDomain joueurDomain;
 
+	/**
+	 * inscription joueur
+	 */
 	@Override
 	public Long inscription(JoueurDTO dto) {
 		

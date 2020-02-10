@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.demo.reservation.domain.IJoueurDomain;
 import com.demo.reservation.dto.JoueurDTO;
 import com.demo.reservation.entity.JoueurEntity;
-import com.demo.reservation.persistence.IJoueurPersistence;
 import com.demo.reservation.repository.IJoueurRepository;
 import com.demo.reservation.utilities.JoueurUtility;
 
@@ -23,11 +22,11 @@ public class JoueurDomainImpl implements IJoueurDomain{
 	@Autowired
 	private IJoueurRepository joueurRepository;
 
-	@Autowired
-	private IJoueurPersistence joueurPersistence;
-
 	private static final Logger logger = LoggerFactory.getLogger(JoueurDomainImpl.class);
 
+	/**
+	 * inscription joueur
+	 */
 	@Override
 	public Long inscription(JoueurDTO dto) {
 		

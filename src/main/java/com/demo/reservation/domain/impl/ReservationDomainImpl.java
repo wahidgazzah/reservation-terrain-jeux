@@ -16,6 +16,7 @@ import com.demo.reservation.dto.ReservationResponseDTO;
 import com.demo.reservation.dto.ReservationTerrainState;
 import com.demo.reservation.entity.ReservationEntity;
 import com.demo.reservation.persistence.IReservationPersistence;
+import com.demo.reservation.service.IYahooWeatherService;
 
 /**
  * Implementation of {@link IReservationDomain}
@@ -30,15 +31,24 @@ public class ReservationDomainImpl implements IReservationDomain{
 
 	@Autowired
 	private IReservationPersistence reservationPersistence;
+	
+	@Autowired
+	private IYahooWeatherService yahooWeatherService;
 
 	private static final Logger logger = LoggerFactory.getLogger(ReservationDomainImpl.class);
 	
+	/**
+	 * recuperer la liste des reservations
+	 */
 	@Override
 	public List<ReservationDTO> getAll() {
 		
 		return reservationPersistence.getAll();
 	}
 
+	/**
+	 * reservation
+	 */
 	@Override
 	public ReservationResponseDTO reservation(ReservationRequestDTO request) {
 		
@@ -52,6 +62,8 @@ public class ReservationDomainImpl implements IReservationDomain{
 			response.setReservationTerrainState(ReservationTerrainState.NON_DISPONIBLE_NBR_JOUEURS_INF_2);
 		}else if(request.getIdsJoueurs().size() > 8) {
 			response.setReservationTerrainState(ReservationTerrainState.NON_DISPONIBLE_NBR_JOUEURS_SUP_8);
+		}else if(request.getDateDebut().compareTo(request.getDateFin()) > 0) {
+			response.setReservationTerrainState(ReservationTerrainState.NON_DISPONIBLE_DATE_RESERVATION_ERRONEES);
 		}else if(disponible) {
 			
 			switch (request.getTerrainType()) {
@@ -82,6 +94,11 @@ public class ReservationDomainImpl implements IReservationDomain{
 		return response;
 	}
 	
+	/**
+	 * doReservation
+	 * @param request
+	 * @return
+	 */
 	private ReservationResponseDTO doReservation(ReservationRequestDTO request) {
 		
 		ReservationResponseDTO response = new ReservationResponseDTO();
@@ -92,7 +109,7 @@ public class ReservationDomainImpl implements IReservationDomain{
 		int reste_minutes = ((int) (hours * 60) - ((int) diff / (60 * 1000)));
 		
 		double prix;
-		//Le prix d'une heure de de 8 euro, les suivantes sont degressives de 5%
+		//Le prix d'une heure et de 8 euro, les suivantes sont a 5%
 		if(hours > 0) {
 			prix =  PRIX_HEURE + ( (double)((hours-1) * PRIX_HEURE) - ((double)((hours-1) * PRIX_HEURE * REDUCTION) / 100)) ;
 			if(reste_minutes % 60 > 0) {
@@ -108,7 +125,6 @@ public class ReservationDomainImpl implements IReservationDomain{
 		}
 		
 		response.setPrix(prix);
-//		response.setTerrainState(TerrainState.DISPONIBLE);
 		
 		ReservationDTO reservation = new ReservationDTO();
 		reservation.setDateReservation(new Date());
@@ -127,9 +143,13 @@ public class ReservationDomainImpl implements IReservationDomain{
 		return response;
 	}
 	
+	/**
+	 * verifier la disponibilite
+	 * @param request
+	 * @return
+	 */
 	private boolean checkDisponibilite(ReservationRequestDTO request) {
 		
-		//le terrain doit etre disponible
 		List<ReservationEntity> result = reservationPersistence.checkDisponibilite(request);
 		
 		if(result != null && result.size() == 0)
@@ -138,9 +158,16 @@ public class ReservationDomainImpl implements IReservationDomain{
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private boolean checkPrevisionPluie(ReservationRequestDTO request) {
-		// TODO call Yahoo Weather service
-		return false;
+		
+		logger.info("Call yahoo weather service");
+		
+		return yahooWeatherService.checkPrevisionPluie(request);
 	}
 
 

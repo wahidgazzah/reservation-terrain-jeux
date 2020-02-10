@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.demo.reservation.entity.ReservationEntity;
 
+/**
+ * Reservation Repository
+ * @author wahid
+ *
+ */
 @Repository
 public interface IReservationRepository extends JpaRepository<ReservationEntity, Long>{
 	

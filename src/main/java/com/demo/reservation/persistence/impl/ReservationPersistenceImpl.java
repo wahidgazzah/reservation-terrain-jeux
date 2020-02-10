@@ -1,7 +1,6 @@
 package com.demo.reservation.persistence.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -13,10 +12,6 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +46,9 @@ public class ReservationPersistenceImpl implements IReservationPersistence{
 
 	private static final Logger logger = LoggerFactory.getLogger(ReservationPersistenceImpl.class);
 
+	/**
+	 * Creer une reservation
+	 */
 	@Override
 	public Long create(ReservationDTO dto) {
 
@@ -66,6 +64,9 @@ public class ReservationPersistenceImpl implements IReservationPersistence{
 		return reservationEntity.getId(); 
 	}
 
+	/**
+	 * Recuperer tous les reservations
+	 */
 	@Override
 	public List<ReservationDTO> getAll() {
 		
@@ -74,12 +75,17 @@ public class ReservationPersistenceImpl implements IReservationPersistence{
 		return ReservationUtility.toDTO(list); 
 	}
 	
-	/**
+	/** Vérifier la disponiblitité d'une reservation d'un terrain sur un axe de temps,
+	 * Le terain doit etre disponible sur la totalité de temps de reservation ( dateDebut, dateFin )
+	 * Quatre cas pour avoir une intersection de temps avec une autre reservation (R0):
+	 * cas_1: R0 CONTIENT nouvelleReservation.dateFin
+	 * cas_2: R0 CONTIENT nouvelleReservation
+	 * cas_3: R0 CONTIENT nouvelleReservation.dateDebut, ou de meme creneau
+	 * cas_4: nouvelleReservation CONTIENT R0
 	 * checkDisponibilite
 	 */
 	@Override
 	public List<ReservationEntity> checkDisponibilite(ReservationRequestDTO request){
-		
 		
 		List <ReservationEntity> result = new ArrayList<>();
 		
@@ -88,7 +94,6 @@ public class ReservationPersistenceImpl implements IReservationPersistence{
 		List<Predicate> whereClause = new ArrayList<Predicate>();
 		Root<ReservationEntity> root = criteriaQuery.from(ReservationEntity.class);
 		
-		// Set terrainType on whereClause
 		whereClause.add(criteriaBuilder.equal(root.get("terrainType"), request.getTerrainType()));
 		
     	Expression<Date> dateDeputPath = root.get("dateDebut");
@@ -102,15 +107,19 @@ public class ReservationPersistenceImpl implements IReservationPersistence{
     	Predicate predicate_22 = criteriaBuilder.lessThan(dateFinPath, request.getDateDebut());
     	Predicate cas_2 = criteriaBuilder.and(predicate_21, predicate_22);
     	
-    	Predicate predicate_31 = criteriaBuilder.greaterThan(dateDeputPath, request.getDateDebut());
-    	Predicate predicate_32 = criteriaBuilder.lessThan(dateFinPath, request.getDateFin());
+    	Predicate predicate_31 = criteriaBuilder.greaterThanOrEqualTo(dateDeputPath, request.getDateDebut());
+    	Predicate predicate_32 = criteriaBuilder.lessThanOrEqualTo(dateFinPath, request.getDateFin());
     	Predicate cas_3 = criteriaBuilder.and(predicate_31, predicate_32);
     	
     	Predicate predicate_41 = criteriaBuilder.lessThan(dateDeputPath, request.getDateDebut());
     	Predicate predicate_42 = criteriaBuilder.greaterThan(dateFinPath, request.getDateDebut());
     	Predicate cas_4 = criteriaBuilder.and(predicate_41, predicate_42);
     	
-    	Predicate predicate = criteriaBuilder.or(cas_1, cas_2, cas_3, cas_4);
+    	Predicate predicate_51 = criteriaBuilder.equal(dateDeputPath, request.getDateDebut());
+    	Predicate predicate_52 = criteriaBuilder.equal(dateFinPath, request.getDateFin());
+    	Predicate cas_5 = criteriaBuilder.and(predicate_41, predicate_42);
+    	
+    	Predicate predicate = criteriaBuilder.or(cas_1, cas_2, cas_3, cas_4, cas_5);
     	whereClause.add(criteriaBuilder.and(predicate));
     	
 	    criteriaQuery.select(root).where(whereClause.toArray(new Predicate[] {}));
