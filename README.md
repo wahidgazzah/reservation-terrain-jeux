@@ -1,28 +1,29 @@
 # reservation-terrain-jeux
 Une application REST en Spring Boot de réservation de terrain des Jeux
 
-Environnement Technique:
-	* Spring MVC
-	* Spring Data
-	* JPA
-	* Hibernate Criteria
-	* Swagger
+### Environnement Technique:
+- Spring MVC,
+- Spring Data,
+- JPA,
+- Hibernate Criteria,
+- Swagger,
 	
-Couches technique de l'application:
-	Couche REST
-	Couche Service
-	Couche Domaine
-	Couche Persistence
+### Couches technique de l'application:
+- Couche REST,
+- Couche Service,
+- Couche Domaine,
+- Couche Persistence,
 
-Base des données: la base en mémoire H2
+### Base des données: la base en mémoire H2
 
-L'application est lancée en spring-boot sur le port par défaut [server.port=8282]
+### L'application est lancée en spring-boot sur le port par défaut [server.port=8282]
 
-Swagger est disponible sur http://localhost:8282/swagger-ui.html
+### Swagger est disponible sur http://localhost:8282/swagger-ui.html
 
-Pour tester l'application:
+### Pour tester l'application:
 
 Créer des joueurs on utilisant l'action POST sur le controller joueurController [joueur/inscription], avec un objet de type JoueurDTO comme @RequestBody: 
+
 	{
 	  "firstName": "gazzah",
 	  "lastName": "wahid",
